@@ -8,7 +8,7 @@ Option Explicit
 '
 ' Description:
 '   Assembles multiple CTDOT specification word documents into a single master specification
-'   book while preserving formatting, headers, footers, and page numbering.
+'   book while preserving formatting, headers, footers, adding page numbering and a TOC.
 '
 '
 ' Version History
@@ -17,7 +17,12 @@ Option Explicit
 '   - Project initialized
 '   - Folder picker implemented
 '   - Specification discovery implemented
-
+'
+'
+' Known Issues
+' - Heading 1 style definition not yet imported from source document
+' - Page numbering not yet implemented
+' - Automatic PDF export not yet implemented
 '==============================================================================
 
 
@@ -45,7 +50,7 @@ Public Sub Main()
 
     templatePath = GetDocumentTemplatePath(CStr(specificationFiles(1)))
 
-    Debug.Print templatePath
+    'Debug.Print templatePath
 
     Debug.Print "Found " & specificationFiles.Count & " specification(s)."
 
@@ -57,10 +62,31 @@ Public Sub Main()
     
     Set outputDocument = CreateOutputDocument( _
     templatePath:=templatePath)
+    
+    Dim temporaryOutputPath As String
+
+    temporaryOutputPath = GetTemporaryOutputPath()
+
+    outputDocument.SaveAs2 _
+        FileName:=temporaryOutputPath, _
+        FileFormat:=wdFormatXMLDocument
+    
+    '
+    ImportDocumentStyles _
+        outputDocument:=outputDocument, _
+        firstSpecificationPath:=specificationFiles(1)
+    '
+    
+    InitializeFrontMatter _
+    outputDocument:=outputDocument
 
     BuildSpecificationBook _
         outputDocument:=outputDocument, _
         specificationFiles:=specificationFiles
+        
+        
+    UpdateTableOfContents _
+        outputDocument:=outputDocument
         
         
     SaveOutputDocument _
