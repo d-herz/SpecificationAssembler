@@ -61,10 +61,44 @@ Public Sub SaveOutputDocument( _
 End Sub
 
 
+Public Sub InitializeFrontMatter( _
+    ByVal outputDocument As Document)
 
+    Dim documentRange As Range
 
+    Set documentRange = outputDocument.Range(0, 0)
 
+    documentRange.InsertAfter "MASTER SPECIFICATIONS"
+    documentRange.InsertParagraphAfter
+    documentRange.InsertParagraphAfter
 
+    documentRange.Collapse wdCollapseEnd
+
+    outputDocument.TablesOfContents.Add _
+        Range:=documentRange, _
+        UseHeadingStyles:=True, _
+        UpperHeadingLevel:=1, _
+        LowerHeadingLevel:=3
+
+    documentRange.Collapse wdCollapseEnd
+
+    documentRange.InsertBreak _
+        Type:=wdPageBreak
+
+End Sub
+
+Public Sub UpdateTableOfContents( _
+    ByVal outputDocument As Document)
+
+    Dim tableOfContents As tableOfContents
+
+    For Each tableOfContents In outputDocument.TablesOfContents
+
+        tableOfContents.Update
+
+    Next tableOfContents
+
+End Sub
 
 
 
@@ -78,17 +112,17 @@ Public Function GetDocumentTemplatePath( _
 
     Dim sourceDocument As Document
 
-    Debug.Print "Opening:"
-    Debug.Print specificationPath
+    'Debug.Print "Opening:"
+    'Debug.Print specificationPath
 
     Set sourceDocument = Documents.Open( _
         FileName:=specificationPath, _
         AddToRecentFiles:=False)
 
-    Debug.Print "Opened successfully."
+    'Debug.Print "Opened successfully."
 
-    Debug.Print "Template:"
-    Debug.Print sourceDocument.AttachedTemplate.FullName
+    'Debug.Print "Template:"
+    'Debug.Print sourceDocument.AttachedTemplate.FullName
 
     GetDocumentTemplatePath = sourceDocument.AttachedTemplate.FullName
 
