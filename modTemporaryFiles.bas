@@ -1,32 +1,20 @@
 Option Explicit
 
 
-Public Function GetSpecificationFiles(ByVal specificationFolder As String) As Collection
+Public Function GetTemporaryOutputPath() As String
 
-    Dim specificationFiles As Collection
-    Dim fileSystem As Object
-    Dim folder As Object
-    Dim file As Object
-    Dim fileExtension As String
+    Dim temporaryFolder As String
 
-    Set specificationFiles = New Collection
+    temporaryFolder = Environ$("TEMP")
 
-    Set fileSystem = CreateObject("Scripting.FileSystemObject")
-    Set folder = fileSystem.GetFolder(specificationFolder)
+    If Right$(temporaryFolder, 1) <> "\" Then
 
-    For Each file In folder.Files
+        temporaryFolder = temporaryFolder & "\"
 
-        fileExtension = LCase(fileSystem.GetExtensionName(file.Name))
+    End If
 
-        Select Case fileExtension
-
-            Case "doc", "docx"
-                specificationFiles.Add Item:=file.Path
-
-        End Select
-
-    Next file
-
-    Set GetSpecificationFiles = specificationFiles
+    GetTemporaryOutputPath = _
+        temporaryFolder & "SpecificationAssembler_Temp.docx"
 
 End Function
+
