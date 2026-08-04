@@ -78,7 +78,10 @@ Public Sub InitializeFrontMatter( _
         Range:=documentRange, _
         UseHeadingStyles:=True, _
         UpperHeadingLevel:=1, _
-        LowerHeadingLevel:=3
+        LowerHeadingLevel:=3, _
+        UseHyperlinks:=True, _
+        HidePageNumbersInWeb:=True, _
+        UseOutlineLevels:=True
 
     documentRange.Collapse wdCollapseEnd
 
