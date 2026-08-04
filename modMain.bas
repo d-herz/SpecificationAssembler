@@ -92,6 +92,9 @@ Public Sub Main()
     SaveOutputDocument _
         outputDocument:=outputDocument, _
         specificationFolder:=specificationFolder
+        
+    DeleteTemporaryOutputFile
+        
 
     MsgBox "Master specification created successfully."
 
